@@ -1,6 +1,8 @@
 package dev.isa.osApi.api.controller;
 
 import dev.isa.osApi.domain.model.Cliente;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,17 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ClienteController {
 
-    List<Cliente> listaClientes;
+    @PersistenceContext
+    private EntityManager manager;
 
     @GetMapping("/clientes")
     public ArrayList<Cliente> listas() {
-        ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
-        listaClientes.add(new Cliente(1, "Kge", "kge@teste.com", "11-99999-9999"));
-        listaClientes.add(new Cliente(2, "isa", "kge@teste.com", "11-99999-9999"));
-        listaClientes.add(new Cliente(3, "oii", "kge@teste.com", "11-99999-9999"));
-
-        return listaClientes;
-
+        // lINGUAGEM JPQL 
+        return (ArrayList<Cliente>) manager.createQuery("From Cliente", Cliente.class).getResultList();
     }
 
 }
