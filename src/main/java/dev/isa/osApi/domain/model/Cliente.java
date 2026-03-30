@@ -4,12 +4,20 @@
  */
 package dev.isa.osApi.domain.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 /**
  *
  * @author digma
  */
+@Entity
 public class Cliente {
-    
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String email;
@@ -78,7 +86,5 @@ public class Cliente {
         final Cliente other = (Cliente) obj;
         return this.id == other.id;
     }
-    
-    
-    
+
 }
