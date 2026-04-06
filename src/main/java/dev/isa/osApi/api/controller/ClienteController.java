@@ -2,6 +2,7 @@ package dev.isa.osApi.api.controller;
 
 import dev.isa.osApi.domain.model.Cliente;
 import dev.isa.osApi.domain.repository.ClienteRepository;
+import dev.isa.osApi.domain.service.ClienteService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
@@ -34,11 +35,14 @@ public class ClienteController {
     @Autowired
     private ClienteRepository clienteRepository;
     
+    @Autowired
+    private ClienteService clienteService;
+    
     @PostMapping("/clientes")
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente adicionar(@Valid @RequestBody Cliente cliente){
 
-        return clienteRepository.save(cliente);
+        return clienteService.salvar(cliente);
     }
     
      @PutMapping("/clientes/{clienteID}")
@@ -48,7 +52,7 @@ public class ClienteController {
              return ResponseEntity.notFound().build();
          }
          cliente.setId(clienteID);
-         cliente = clienteRepository.save(cliente);
+         cliente = clienteService.salvar(cliente);
          return ResponseEntity.ok(cliente);
      } 
      
@@ -58,7 +62,7 @@ public class ClienteController {
          if(!clienteRepository.existsById(clienteID)){
              return ResponseEntity.notFound().build();
          }
-         clienteRepository.deleteById(clienteID);
+         clienteService.excluir(clienteID);
          return ResponseEntity.noContent().build();
      } 
 
