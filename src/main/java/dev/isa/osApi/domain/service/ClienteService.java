@@ -6,7 +6,11 @@ package dev.isa.osApi.domain.service;
 
 import dev.isa.osApi.domain.exception.DomainException;
 import dev.isa.osApi.domain.model.Cliente;
+import dev.isa.osApi.domain.model.OrdemServico;
+import dev.isa.osApi.domain.model.StatusOrdemServico;
 import dev.isa.osApi.domain.repository.ClienteRepository;
+import dev.isa.osApi.domain.repository.OrdemServicoRepository;
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,23 +20,16 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ClienteService {
-    
+
     @Autowired
     private ClienteRepository clienteRepository;
-    
-    public Cliente salvar(Cliente cliente){
-        Cliente clienteExistente = clienteRepository.findByEmail(cliente.getEmail());
-        
-        if (clienteExistente != null && !clienteExistente.equals(cliente)){
-            throw new DomainException("Já exite um cliente cadastrado com esse email");
-        }
-        
-        return clienteRepository.save(cliente);
-        
+
+    public OrdemServico criar(OrdemServico ordemServico) {
+        ordemServico.setStatus(StatusOrdemServico.ABERTA);
+        ordemServico.setDataAbertura(LocalDateTime.now());
+
+        return OrdemServicoRepository.save(ordemServico);
+
     }
-    
-    public void excluir(Long clienteID){
-        clienteRepository.deleteById(clienteID);
-    }    
-    
+
 }
