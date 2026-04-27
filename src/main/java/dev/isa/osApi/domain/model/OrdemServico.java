@@ -36,8 +36,9 @@ public class OrdemServico {
     @Enumerated(EnumType.STRING)
     private StatusOrdemServico status;
     
+    private LocalDateTime dataAbertura;
     private LocalDateTime dataFinalizacao;
- 
+    
     
     public OrdemServico() {
     }
@@ -91,9 +92,19 @@ public class OrdemServico {
     public LocalDateTime getDataFinalizacao() {
         return dataFinalizacao;
     }
+    
+    
 
     public void setDataFinalizacao(LocalDateTime dataFinalizacao) {
         this.dataFinalizacao = dataFinalizacao;
+    }
+    
+    public LocalDateTime getDataAbertura() {
+        return dataAbertura;
+    }
+
+    public void setDataAbertura(LocalDateTime dataAbertura) {
+        this.dataAbertura = dataAbertura;
     }
 
     @Override
@@ -118,11 +129,6 @@ public class OrdemServico {
         return Objects.equals(this.id, other.id);
     }
 
-    public void setDataAbertura(LocalDateTime MIN) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    
     
     
 
