@@ -25,19 +25,18 @@ public class DomainException extends RuntimeException {
     }
    
     
-    @ExceptionHandler(DomainException.class)
-    public ResponseEntity<Object> handleDomainException(DomainException ex, WebRequest request) {
-        var status = HttpStatus.BAD_REQUEST;
-        ProblemaException problema = new ProblemaException();
-        problema.setStatus(status.value());
-        problema.setTitulo(ex.getMessage());
-        problema.setDataHora(LocalDateTime.now());
+   // @ExceptionHandler(DomainException.class)
+   // public ResponseEntity<Object> handleDomainException(DomainException ex, WebRequest request) {
+      //  var status = HttpStatus.BAD_REQUEST;
+     //   problema.setStatus(status.value());
+     //   problema.setTitulo(ex.getMessage());
+    //    problema.setDataHora(LocalDateTime.now());
 
-        return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
-    }
+    //    return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
+   // }
 
-    private ResponseEntity<Object> handleExceptionInternal(DomainException ex, ProblemaException problema, HttpHeaders httpHeaders, HttpStatus status, WebRequest request) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+  //  private ResponseEntity<Object> handleExceptionInternal(DomainException ex, ProblemaException problema, HttpHeaders httpHeaders, HttpStatus status, WebRequest request) {
+   //     throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+   // }
 
 }
