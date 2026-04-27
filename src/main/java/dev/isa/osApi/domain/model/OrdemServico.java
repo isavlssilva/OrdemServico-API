@@ -21,7 +21,7 @@ import java.util.Objects;
  */
 @Entity
 public class OrdemServico {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,7 +37,8 @@ public class OrdemServico {
     private StatusOrdemServico status;
     
     private LocalDateTime dataFinalizacao;
-
+ 
+    
     public OrdemServico() {
     }
 

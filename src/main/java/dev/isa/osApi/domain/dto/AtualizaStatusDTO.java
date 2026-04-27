@@ -15,6 +15,5 @@ public record AtualizaStatusDTO(
         @NotNull(message = "Status é obrigatório")
         StatusOrdemServico status
         ) {
-
 }
          

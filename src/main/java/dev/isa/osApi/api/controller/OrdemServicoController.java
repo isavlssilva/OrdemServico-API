@@ -39,8 +39,7 @@ public class OrdemServicoController {
 
     @PutMapping("/atualiza-status/{ordemServicoID}")
     public ResponseEntity<OrdemServico> atualizaStatus(
-            @PathVariable Long ordemServicoID,
-            @Valid @RequestBody AtualizaStatusDTO statusDTO) {
+            @PathVariable Long ordemServicoID, @Valid @RequestBody AtualizaStatusDTO statusDTO) {
 
         Optional<OrdemServico> optOS = ordemServicoService.atualizaStatus(ordemServicoID, statusDTO.status());
 
