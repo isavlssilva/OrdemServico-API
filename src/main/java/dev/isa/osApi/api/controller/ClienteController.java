@@ -34,56 +34,92 @@ public class ClienteController {
 
     @Autowired
     private ClienteRepository clienteRepository;
-    
+
     @Autowired
     private ClienteService clienteService;
-    
+
+    //- CRUD ---------------------------------------------------------------------
     @PostMapping("/clientes")
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente adicionar(@Valid @RequestBody Cliente cliente){
+    public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
 
         return clienteService.salvar(cliente);
     }
-    
-     @PutMapping("/clientes/{clienteID}")
-     public ResponseEntity<Cliente> atualizar(@Valid @PathVariable Long clienteID, @RequestBody Cliente cliente){
-        
-         if(!clienteRepository.existsById(clienteID)){
-             return ResponseEntity.notFound().build();
-         }
-         cliente.setId(clienteID);
-         cliente = clienteService.salvar(cliente);
-         return ResponseEntity.ok(cliente);
-     } 
-     
-     @DeleteMapping("/clientes/{clienteID}")
-     public ResponseEntity<Void> excluir(@PathVariable Long clienteID){
-        
-         if(!clienteRepository.existsById(clienteID)){
-             return ResponseEntity.notFound().build();
-         }
-         clienteService.excluir(clienteID);
-         return ResponseEntity.noContent().build();
-     } 
 
+    @PutMapping("/clientes/{clienteID}")
+    public ResponseEntity<Cliente> atualizar(@Valid @PathVariable Long clienteID, @RequestBody Cliente cliente) {
+
+        if (!clienteRepository.existsById(clienteID)) {
+            return ResponseEntity.notFound().build();
+        }
+        cliente.setId(clienteID);
+        cliente = clienteService.salvar(cliente);
+        return ResponseEntity.ok(cliente);
+    }
+
+    @DeleteMapping("/clientes/{clienteID}")
+    public ResponseEntity<Void> excluir(@PathVariable Long clienteID) {
+
+        if (!clienteRepository.existsById(clienteID)) {
+            return ResponseEntity.notFound().build();
+        }
+        clienteService.excluir(clienteID);
+        return ResponseEntity.noContent().build();
+    }
+
+    //------------------------------------------------------------------------------
+    // Listar todos os clientes
     @GetMapping("/clientes")
     public List<Cliente> listas() {
         return clienteRepository.findAll();
-        //return clienteRepository.findByNome("KGe");
-        //return clienteRepository.findByNomeContaining("Silva");
-
     }
 
-    @GetMapping("/clientes/{clienteID}")
+    //------------------------------------------------------------------------------
+    // Listar clientes por ID
+    @GetMapping("/clientes/ID/{clienteID}")
     public ResponseEntity<Cliente> buscar(@PathVariable Long clienteID) {
         Optional<Cliente> cliente = clienteRepository.findById(clienteID);
-        
+
         if (cliente.isPresent()) {
             return ResponseEntity.ok(cliente.get());
         } else {
             return ResponseEntity.notFound().build();
         }
 
+    }
+
+    // ------------------------------------------------------------------------------
+    // Listar Cliente por email
+    @GetMapping("/clientes/email/{clienteEmail}")
+    public ResponseEntity<Cliente> buscar(@PathVariable String clienteEmail) {
+        Cliente clienteExistente = clienteRepository.findByEmail(clienteEmail);
+
+        if (clienteExistente != null && !clienteExistente.equals(clienteEmail)) {
+
+            return ResponseEntity.ok(clienteExistente);
+
+        } else {
+
+            return ResponseEntity.notFound().build();
+
+        }
+    }
+    // ------------------------------------------------------------------------------
+    //Listar Cliente por Telefone
+
+    @GetMapping("/clientes/telefone/{clienteFone}")
+    public ResponseEntity<Cliente> buscaa(@PathVariable String clienteFone) {
+        Cliente clienteExistente = clienteRepository.findByFone(clienteFone);
+
+        if (clienteExistente != null && !clienteExistente.equals(clienteFone)) {
+
+            return ResponseEntity.ok(clienteExistente);
+
+        } else {
+
+            return ResponseEntity.notFound().build();
+
+        }
     }
 
 }
