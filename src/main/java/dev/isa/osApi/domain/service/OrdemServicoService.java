@@ -9,6 +9,7 @@ import dev.isa.osApi.domain.model.OrdemServico;
 import dev.isa.osApi.domain.model.StatusOrdemServico;
 import dev.isa.osApi.domain.repository.OrdemServicoRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,9 @@ public class OrdemServicoService {
     @Autowired
     private OrdemServicoRepository ordemServicoRepository;
 
+    
+    //-------------------------------------------------------------------------------------------
+    //CRUD
     public OrdemServico criar(OrdemServico ordemServico) {
         ordemServico.setStatus(StatusOrdemServico.ABERTA);
         ordemServico.setDataAbertura(LocalDateTime.now());
@@ -40,14 +44,14 @@ public class OrdemServicoService {
 
             //Verifica se ordem está ABERTA
             if (ordemServico.getStatus() != StatusOrdemServico.ABERTA && StatusOrdemServico.ABERTA != status) {
-                
+
                 ordemServico.setStatus(status);
                 ordemServico.setDataFinalizacao(LocalDateTime.now());
                 ordemServicoRepository.save(ordemServico);
                 return Optional.of(ordemServico);
-                
+
             } else {
-                
+
                 //ops.. ordem FINALIZADA ou CANCELADA. Não alterar
                 return Optional.empty();
             }
@@ -56,5 +60,7 @@ public class OrdemServicoService {
             throw new DomainException("Não existe OS com id" + ordemServicoID);
         }
     }
+
+   
 
 }

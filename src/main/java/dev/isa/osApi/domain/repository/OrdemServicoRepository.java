@@ -4,13 +4,19 @@
  */
 package dev.isa.osApi.domain.repository;
 
+import dev.isa.osApi.domain.model.Cliente;
 import dev.isa.osApi.domain.model.OrdemServico;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author digma
  */
-public interface OrdemServicoRepository extends JpaRepository <OrdemServico, Long> {
+@Repository
+public interface OrdemServicoRepository extends JpaRepository<OrdemServico, Long> {
+
     
+    List<OrdemServico> findByClienteIdAndStatus(Long clienteId, String status);
 }
