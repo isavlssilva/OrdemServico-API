@@ -4,6 +4,7 @@
  */
 package dev.isa.osApi.domain.service;
 
+import dev.isa.osApi.api.controller.OrdemServicoController;
 import dev.isa.osApi.domain.exception.DomainException;
 import dev.isa.osApi.domain.model.OrdemServico;
 import dev.isa.osApi.domain.model.StatusOrdemServico;
@@ -24,7 +25,44 @@ public class OrdemServicoService {
     @Autowired
     private OrdemServicoRepository ordemServicoRepository;
 
-    
+    //-------------------------------------------------------------------------------------------
+    //Listar por cliente e suas caracteristica...
+    public List<OrdemServico> listarPorClientePorStatus(Long clienteId, StatusOrdemServico status) {
+        return ordemServicoRepository
+                .findByClienteIdAndStatus(clienteId, status);
+    }
+
+    //-------------------------------------------------------------------------------------------
+    //--Listar por comentarios e suas caracteristica...
+    //-- Listar por OS com comentarios 
+    public List<OrdemServico> listarComComentarios() {
+
+        return ordemServicoRepository.findByComentariosIsNotEmpty();
+
+    }
+
+    //--Listar por OS sem comentarios 
+    public List<OrdemServico> listarSemComentarios() {
+
+        return ordemServicoRepository.findByComentariosIsEmpty();
+
+    }
+
+    //-------------------------------------------------------------------------------------------
+    //--Listar OS Status e com comentarios
+    public List<OrdemServico> listarComComentarioPorStatus(StatusOrdemServico status) {
+        return ordemServicoRepository
+                .findByStatusAndComentariosIsNotEmpty(status);
+    }
+
+    //--Listar OS status sem comentarios
+    public List<OrdemServico> listarSemComentarioPorStatus(StatusOrdemServico status) {
+
+        return ordemServicoRepository
+                .findByStatusAndComentariosIsEmpty(status);
+
+    }
+
     //-------------------------------------------------------------------------------------------
     //CRUD
     public OrdemServico criar(OrdemServico ordemServico) {
@@ -60,7 +98,6 @@ public class OrdemServicoService {
             throw new DomainException("Não existe OS com id" + ordemServicoID);
         }
     }
-
-   
+    //-------------------------------------------------------------------------------------------------------
 
 }

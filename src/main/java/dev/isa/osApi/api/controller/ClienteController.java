@@ -1,8 +1,15 @@
 package dev.isa.osApi.api.controller;
 
 import dev.isa.osApi.domain.model.Cliente;
+import dev.isa.osApi.domain.model.OrdemServico;
 import dev.isa.osApi.domain.repository.ClienteRepository;
 import dev.isa.osApi.domain.service.ClienteService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
@@ -29,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author digma
  */
+@SecurityRequirement(name = "ApiKeyAuth")
 @RestController
 public class ClienteController {
 
@@ -37,6 +45,9 @@ public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
+
+    
+
 
     //- CRUD ---------------------------------------------------------------------
     @PostMapping("/clientes")
@@ -65,13 +76,6 @@ public class ClienteController {
         }
         clienteService.excluir(clienteID);
         return ResponseEntity.noContent().build();
-    }
-
-    //------------------------------------------------------------------------------
-    // Listar todos os clientes
-    @GetMapping("/clientes")
-    public List<Cliente> listas() {
-        return clienteRepository.findAll();
     }
 
     //------------------------------------------------------------------------------

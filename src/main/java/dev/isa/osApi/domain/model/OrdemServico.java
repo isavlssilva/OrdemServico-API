@@ -4,6 +4,9 @@
  */
 package dev.isa.osApi.domain.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -11,8 +14,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -20,34 +25,53 @@ import java.util.Objects;
  * @author digma
  */
 @Entity
+//@SecurityRequirement(name = "ApiKeyAuth")
 public class OrdemServico {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "ID exclusivo da Ordem de Serviço", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long id;
-    
-    
+
     @ManyToOne
-    private Cliente cliente;
-    
+    private Cliente cliente; // chave estrangeira no banco
+
+    @Schema(description = "Nome ou descrição da Ordem de Serviço", example = "Manutenção de Servidor", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String descricao;
     private BigDecimal preco;
+
     
+    @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comentarios> comentarios;
+
     @Enumerated(EnumType.STRING)
     private StatusOrdemServico status;
-    
+
     private LocalDateTime dataAbertura;
     private LocalDateTime dataFinalizacao;
-    
-    
+
     public OrdemServico() {
     }
 
-    public OrdemServico(Cliente cliente, String descricao, BigDecimal preco) {
+    public OrdemServico(Long id, Cliente cliente, String descricao, BigDecimal preco, List<Comentarios> comentarios, StatusOrdemServico status, LocalDateTime dataAbertura, LocalDateTime dataFinalizacao) {
+        this.id = id;
         this.cliente = cliente;
         this.descricao = descricao;
         this.preco = preco;
+        this.comentarios = comentarios;
+        this.status = status;
+        this.dataAbertura = dataAbertura;
+        this.dataFinalizacao = dataFinalizacao;
     }
+
+    public List<Comentarios> getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(List<Comentarios> comentarios) {
+        this.comentarios = comentarios;
+    }
+    
 
     public Long getId() {
         return id;
@@ -92,13 +116,11 @@ public class OrdemServico {
     public LocalDateTime getDataFinalizacao() {
         return dataFinalizacao;
     }
-    
-    
 
     public void setDataFinalizacao(LocalDateTime dataFinalizacao) {
         this.dataFinalizacao = dataFinalizacao;
     }
-    
+
     public LocalDateTime getDataAbertura() {
         return dataAbertura;
     }
@@ -128,10 +150,5 @@ public class OrdemServico {
         final OrdemServico other = (OrdemServico) obj;
         return Objects.equals(this.id, other.id);
     }
-
-    
-    
-
-
 
 }

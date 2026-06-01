@@ -6,8 +6,13 @@ package dev.isa.osApi.api.controller;
 
 import dev.isa.osApi.domain.dto.AtualizaStatusDTO;
 import dev.isa.osApi.domain.model.OrdemServico;
+import dev.isa.osApi.domain.model.StatusOrdemServico;
 import dev.isa.osApi.domain.repository.OrdemServicoRepository;
 import dev.isa.osApi.domain.service.OrdemServicoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +39,36 @@ public class OrdemServicoController {
     @Autowired
     private OrdemServicoService ordemServicoService;
 
+    @Autowired
+    private OrdemServicoRepository ordemServicoRepository;
+
+    //-------------------------------------------------------------------------------
+    //- SWAGGER ---------------------------------------------------------------------
+    @Operation(
+            summary = "Obter uma OS por ID",
+            description = "Retorna os detalhes de uma Ordem de Serviço com base no ID fornecido."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Ordem de Serviço encontrada com sucesso"),
+        @ApiResponse(responseCode = "404", description = "Ordem de Serviço não encontrada")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<OrdemServico> getOS(
+            @PathVariable("id")
+            @Parameter(description = "ID da Ordem de Serviço a ser buscada", example = "1", required = true) Long id
+    ) {
+        return ordemServicoRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    //-----------------------------------------------------------------------------------------------------------
+    //Listar todos
+    @GetMapping
+    public List<OrdemServico> listas() {
+        return ordemServicoRepository.findAll();
+    }
+
     //-----------------------------------------------------------------------------------------------------------
     //CRUD
     @PostMapping
@@ -55,25 +90,53 @@ public class OrdemServicoController {
         }
 
     }
+
     //-----------------------------------------------------------------------------------------------------------
     //lISTAR POR ID
-    @Autowired
-    private OrdemServicoRepository ordemServicoRepository;
+    @GetMapping("/cliente/{clienteId}/{status}")
 
-    @GetMapping("/ordem-servico/{clienteID}/abertas")
-    public ResponseEntity<List<OrdemServico>> listarAbertasPorCliente(@PathVariable Long clienteID) {
+    public List<OrdemServico> listarAbertasPorCliente(@PathVariable Long clienteId, @PathVariable String statusString) {
+        StatusOrdemServico status = StatusOrdemServico.valueOf(statusString);
+        return ordemServicoService.listarPorClientePorStatus(clienteId, status);
 
-        List<OrdemServico> abertas = ordemServicoRepository.findByClienteIdAndStatus(clienteID, "ABERTA");
-
-        return ResponseEntity.ok(abertas);
-    }
-
-    @GetMapping("/ordem-servico/{clienteID}/fechadas")
-    public ResponseEntity<List<OrdemServico>> listarFechadasPorCliente(@PathVariable Long clienteID) {
-        List<OrdemServico> fechadas = ordemServicoRepository.findByClienteIdAndStatus(clienteID, "FECHADA");
-
-        return ResponseEntity.ok(fechadas);
     }
 
     //-----------------------------------------------------------------------------------------------------------
+    //lISTAR sem comentarios
+    @GetMapping("/sem-comentarios")
+
+    public List<OrdemServico> listarSemComentarios() {
+
+        return ordemServicoService.listarSemComentarios();
+
+    }
+
+    //-----------------------------------------------------------------------------------------------------------
+    //lISTAR sem comentarios
+    @GetMapping("/com-comentarios")
+
+    public List<OrdemServico> listarComComentarios() {
+
+        return ordemServicoService.listarComComentarios();
+
+    }
+
+    //-----------------------------------------------------------------------------------------------------------
+    //lISTAR com comentarios por status 
+    @GetMapping("/com-comentarios/{clienteId}/{status}")
+
+    public List<OrdemServico> listarComComentarioPorStatus(@PathVariable String statusString) {
+        StatusOrdemServico status = StatusOrdemServico.valueOf(statusString);
+        return ordemServicoService.listarComComentarioPorStatus(status);
+    }
+
+    //-----------------------------------------------------------------------------------------------------------
+    //lISTAR sem comentarios por status 
+    @GetMapping("/sem-comentarios/{clienteId}/{status}")
+
+    public List<OrdemServico> listarSemComentarioPorStatus(@PathVariable String statusString) {
+        StatusOrdemServico status = StatusOrdemServico.valueOf(statusString);
+        return ordemServicoService.listarSemComentarioPorStatus(status);
+    }
+
 }

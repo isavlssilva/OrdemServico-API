@@ -4,6 +4,7 @@
  */
 package dev.isa.osApi.domain.model;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,27 +19,29 @@ import jakarta.validation.constraints.Size;
  * @author digma
  */
 @Entity
+@SecurityRequirement(name = "ApiKeyAuth")
 public class Cliente {
+
+    
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @NotBlank
     @Size(max = 60)
     private String nome;
- 
+
     @NotBlank
     @Email
     @Size(max = 255)
     private String email;
-    
 
     @NotBlank
     @Size(max = 20)
-    @Column(name =  "telefone")
+    @Column(name = "telefone")
     private String fone;
-    
+
     public Cliente() {
         //constructor default
     }
